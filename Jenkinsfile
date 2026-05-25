@@ -1,30 +1,40 @@
-
 pipeline {
     agent any
 
     stages {
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/your-repo/project.git'
-            }
-        }
 
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                bat 'pip install -r requirements.txt'
             }
         }
 
-        stage('Train Model') {
+        stage('Train ML Model') {
             steps {
-                sh 'python train_model.py'
+                bat 'python train_model.py'
             }
         }
 
-        stage('Docker Build') {
+        stage('Build Docker Image') {
             steps {
-                sh 'docker build -t deployment-failure-predictor .'
+                bat 'docker build -t ai-deployment-failure-predictor .'
             }
+        }
+
+        stage('Show Docker Images') {
+            steps {
+                bat 'docker images'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline executed successfully.'
+        }
+
+        failure {
+            echo 'Pipeline failed.'
         }
     }
 }
